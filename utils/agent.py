@@ -1,7 +1,4 @@
-"""
-Top Lvl Agent Module
-
-"""
+from typing import *
 
 from chatbot import ChatBot
 from loader import NewCourse
@@ -9,32 +6,40 @@ from encoder import Encoder
 
 
 class Agent:
-    """Top level for AI Agent. Composed of
-       Encoder, DB, & NewCourse instance
+    """
+    Represents a top-level AI agent, composed of Encoder, DB, and NewCourse instances.
     """
 
-    def __init__(self, name: str, path: str, cot_type: int, embedding_params: list):
+    def __init__(self, name: str, path: str, cot_type: int, embedding_params: List[Union[str, float, int]]):
         """
-        Initializes the Agent with a name and path.
+        Initializes an Agent object with a name, path, type, and embedding parameters.
 
         Parameters:
-            - name: Name of the agent.
-            - path: Document path.
+            name (str): Name of the agent.
+            path (str): Document path.
+            cot_type (int): Type of the agent.
+            embedding_params (List[Union[str, float, int]]): List containing embedding parameters.
         """
-        self.name = name
-        self.path = path
-        self.cot_name = cot_type
+        self.name: str = name
+        self.path: str = path
+        self.cot_name: int = cot_type
         self.embedding_params = embedding_params
         # Subprocesses
         # creates self.docs
-        print('creating course for ' + self.name)
+        print('🔥  Conjuring up',  self.name,  ' 🔥 ')
+        print('⚫')
+        print('🧙 creating course  🧙')
+        print('⚫')
         self.course = NewCourse(name, path, embedding_params)
-        print('creating encoder for ' + self.name)
+        print('🔮 creating encoder  🔮 ')
+        print('⚫')
         # creates self.vectordb
         self.encoder = Encoder(self.course)
-        print('creating chat_bot for ' + self.name)
+        print('🧚 creating chat_bot for  🧚')
         self.chat_bot = ChatBot(self)
-        print(f'the path being used for {self.name} is {path}')
+        print('⚫')
+        print(f'the path  🌈 being used for {self.name} is {path}')
+        print('⚫')
         self.vectordb = self.encoder.vectordb
 
     def new_course(self):
@@ -48,7 +53,8 @@ class Agent:
         self.course.from_pdf(self.path)
         self.vectordb = self.encoder.subprocess_create_embeddings(
             self.course.docs)
-        print('instance created')
+        print('🌟 instance created 🌟 ')
+        print('⚫')
 
     def start_chat(self):
         """
@@ -80,6 +86,8 @@ class Agent:
 
         """
         print(f'waking up agent {self.name}')
+        print('⚫')
+
         self.chat_bot.set_agent()
 
     def load_mem(self):
@@ -88,13 +96,13 @@ class Agent:
        Provided self.path is to the DB
        """
 
-    def add_memory(self, path, path_to_db):
+    def add_memory(self, path):
         '''
          Add documents to vector db
          path: document path
-         path_to_db: path to chroma 
         '''
-        print(f'adding {path}')
+        print(f'🦄 adding {path} 🦄')
+        print('⚫')
         pages = self.course.from_pdf(path)
         docs = self.encoder.create_chunks(pages)
 
@@ -102,6 +110,7 @@ class Agent:
         self.vectordb.persist()
         # self.encoder.vectordb.add_documents(embeddings)
         print("memory updated")
+        print('⚫')
 
         # with open('output.log', 'r') as file:
         #     # Read the content of the file
@@ -120,5 +129,5 @@ if __name__ == "__main__":
     path = 'documents/meowsmeowing.pdf'
 
     testAgent = Agent('agent_snd', path, 0, embedding_params)
-
+    testAgent.add_memory("documents/LtoA.pdf")
     testAgent.start_chat()

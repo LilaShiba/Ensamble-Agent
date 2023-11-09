@@ -8,10 +8,11 @@ from langchain.embeddings.sentence_transformer import \
     SentenceTransformerEmbeddings
 from langchain.vectorstores import Chroma
 
-logging.basicConfig(filename='output.log', level=logging.INFO)
-
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+# Configure logging to include time and date
+logging.basicConfig(filename='output.log',
+                    format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 class ChatBot:
@@ -58,17 +59,20 @@ class ChatBot:
         exit_flag = False
         while not exit_flag:
             quest = input(
-                f"Please ask a question about {self.name} or type 'exit' to end: ")
+                f"Please ask a question to 💖💖💖 {self.name} 💖💖💖 or type 'exit' to end: ")
             quest = self.question + quest
 
             if quest.lower() == 'exit' or "exit" in quest.lower():
                 exit_flag = True
-                print("Goodbye BB!")
+                print("💖 Goodbye BB 💖!")
             else:
                 response = qa_chain({"query": quest})
                 # print(f"{self.name}: {response}")
-                logging.info(self.name, response)
+                logging.log(self.name, response)
                 print(response)
+                print("✨")
+                print("✨")
+                print("✨")
 
     def set_agent(self):
         """

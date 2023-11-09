@@ -1,34 +1,25 @@
-"""
-Dual Encoder Module
-Creates Vector Embeddings
-
-"""
-import sys
-
+from typing import *
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.embeddings.sentence_transformer import \
-    SentenceTransformerEmbeddings
+from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from langchain.text_splitter import TokenTextSplitter
 from langchain.vectorstores import Chroma
-
-# sys.path.append('../..')
 
 
 class Encoder:
     """
-    Handles encoding of documents for a given course.
+    Handles the encoding of documents for a course.
     """
 
-    def __init__(self, course_instance):
+    def __init__(self, course_instance: object):
         """
-        Initializes the Encoder with a given course instance.
+        Initializes an Encoder with a course instance.
 
         Parameters:
-            - course_instance: Instance of NewCourse.
+            course_instance (object): Instance of NewCourse.
         """
-        self.model = course_instance.embedding_params[0]
-        self.chunk_size = course_instance.embedding_params[1]
-        self.overlap = course_instance.embedding_params[2]
+        self.model: str = course_instance.embedding_params[0]
+        self.chunk_size: int = course_instance.embedding_params[1]
+        self.overlap: int = course_instance.embedding_params[2]
         self.course_instance = course_instance
         self.name = course_instance.name
 
@@ -93,9 +84,9 @@ class Encoder:
         if not docs:
             docs = self.docs
         self.create_chunks(docs)
-        print("chunks created")
+        print("🧩 chunks created 🧩")
         self.embed_chunks()
-        print("embedding created")
+        print(" 🔗 embedding created 🔗")
         # save to disk
         self.vectordb = Chroma.from_documents(
             self.docs, self.embedding_function, persist_directory="./chroma_db/"+self.name)
@@ -176,8 +167,9 @@ class Encoder:
         '''
 
         self.vectordb.add_documents(documents=path)
+        self.vectordb.persist()
 
-    def add_embeddings(self, docs, path_to_db):
+    def get_embeddings(self, docs, path_to_db):
         """
         Add documents
         """

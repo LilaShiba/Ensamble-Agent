@@ -1,50 +1,55 @@
-""" Import Resources Module """
-
+from typing import List, Union, Optional
 import os
 import sys
+from typing import List, Tuple, Union
+
 import openai
 from dotenv import find_dotenv, load_dotenv
 from langchain.document_loaders import PyPDFLoader, TextLoader, UnstructuredHTMLLoader
 from langchain.document_loaders.csv_loader import CSVLoader
 
-sys.path.append('../..')
 load_dotenv(find_dotenv())
 openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 class NewCourse:
-    """Manages the creation and handling of courses."""
+    """ Manages the creation and handling of courses. """
 
-    def __init__(self, name: str, path: str, embedding_params: list):
-        """
-        Initializes the NewCourse object.
-
-        Parameters:
-            - name: Name of the course.
-            - path: Document path for the course.
-        """
-        self.name = name
-        self.doc_path = path
+    def __init__(self, name: str, path: str, embedding_params: List[Union[str, float, int]]):
+        self.name: str = name
+        self.doc_path: str = path
         self.docs = None
-
         self.embedding_function = embedding_params[0]
-
         self.embedding_params = embedding_params
-        self.from_pdf(path)
+        self.load_documents(path)
 
-    def from_pdf(self, path):
+    def load_documents(self, path: str) -> Optional[list]:
+        try:
+            if path.endswith('.pdf'):
+                loader = PyPDFLoader(path)
+            elif path.endswith('.txt'):
+                loader = TextLoader(path)
+            elif path.endswith('.csv'):
+                loader = CSVLoader(file_path=path)
+            elif path.endswith('.html'):
+                loader = UnstructuredHTMLLoader(file_path=path)
+            else:
+                raise ValueError(f"Unsupported file format: {path}")
+            self.docs = loader.load()
+            return self.docs
+        except Exception as e:
+            print(f"Error loading documents from {path}: {e}")
+            return None
+
+    def from_pdf(self, path: str):
         """
-        Creates new course from pdf
+        Loads course content from a PDF file.
 
         Parameters:
-        PDF path
+            path (str): Path to the PDF file.
 
         Returns:
-        self.url
-        self.docs 
-        self.chunks
-        self.embeddings
-
+            docs (list): List of documents extracted from the PDF.
         """
         loader = PyPDFLoader(path)
         self.docs = loader.load()
