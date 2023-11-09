@@ -68,7 +68,7 @@ class ChatBot:
             else:
                 response = qa_chain({"query": quest})
                 # print(f"{self.name}: {response}")
-                logging.log(self.name, response)
+                logging.info(self.name, response)
                 print(response)
                 print("✨")
                 print("✨")

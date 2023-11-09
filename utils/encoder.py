@@ -10,7 +10,7 @@ class Encoder:
     Handles the encoding of documents for a course.
     """
 
-    def __init__(self, course_instance: object):
+    def __init__(self, course_instance: object, load: bool = False):
         """
         Initializes an Encoder with a course instance.
 
@@ -33,7 +33,9 @@ class Encoder:
 
         self.embedding_function = SentenceTransformerEmbeddings(
             model_name=self.model)
-
+        if load:
+            self.from_db(self.course_instance.doc_path)
+            return
         self.subprocess_create_embeddings()
 
     def create_chunks(self, chunk=200, overlap=15):
@@ -85,8 +87,10 @@ class Encoder:
             docs = self.docs
         self.create_chunks(docs)
         print("🧩 chunks created 🧩")
+        print('⚫')
         self.embed_chunks()
         print(" 🔗 embedding created 🔗")
+        print('⚫')
         # save to disk
         self.vectordb = Chroma.from_documents(
             self.docs, self.embedding_function, persist_directory="./chroma_db/"+self.name)

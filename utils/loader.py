@@ -15,13 +15,14 @@ openai.api_key = os.environ['OPENAI_API_KEY']
 class NewCourse:
     """ Manages the creation and handling of courses. """
 
-    def __init__(self, name: str, path: str, embedding_params: List[Union[str, float, int]]):
+    def __init__(self, name: str, path: str, embedding_params: List[Union[str, float, int]], load_course: bool = False):
         self.name: str = name
         self.doc_path: str = path
         self.docs = None
         self.embedding_function = embedding_params[0]
         self.embedding_params = embedding_params
-        self.load_documents(path)
+        if not load_course:
+            self.load_documents(path)
 
     def load_documents(self, path: str) -> Optional[list]:
         try:

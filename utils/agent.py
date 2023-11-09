@@ -10,7 +10,7 @@ class Agent:
     Represents a top-level AI agent, composed of Encoder, DB, and NewCourse instances.
     """
 
-    def __init__(self, name: str, path: str, cot_type: int, embedding_params: List[Union[str, float, int]]):
+    def __init__(self, name: str, path: str, cot_type: int, embedding_params: List[Union[str, float, int]], new_course: bool = False):
         """
         Initializes an Agent object with a name, path, type, and embedding parameters.
 
@@ -19,22 +19,27 @@ class Agent:
             path (str): Document path.
             cot_type (int): Type of the agent.
             embedding_params (List[Union[str, float, int]]): List containing embedding parameters.
+            loat (bool): load course rather than create
         """
         self.name: str = name
         self.path: str = path
         self.cot_name: int = cot_type
-        self.embedding_params = embedding_params
+        self.embedding_params: list = embedding_params
+        # Pack Details
+        self.vector: list = list()
+        self.state: str = None
         # Subprocesses
         # creates self.docs
         print('🔥  Conjuring up',  self.name,  ' 🔥 ')
         print('⚫')
         print('🧙 creating course  🧙')
+        self.course = NewCourse(name, path, embedding_params, new_course)
         print('⚫')
-        self.course = NewCourse(name, path, embedding_params)
         print('🔮 creating encoder  🔮 ')
-        print('⚫')
         # creates self.vectordb
-        self.encoder = Encoder(self.course)
+
+        self.encoder = Encoder(self.course, new_course)
+        print('⚫')
         print('🧚 creating chat_bot for  🧚')
         self.chat_bot = ChatBot(self)
         print('⚫')
@@ -124,10 +129,10 @@ class Agent:
 
 
 if __name__ == "__main__":
-
     embedding_params = ["facebook-dpr-ctx_encoder-multiset-base", 200, 25, 0.7]
     path = 'documents/meowsmeowing.pdf'
+    db_path = 'chroma_db/agent_snd'
 
-    testAgent = Agent('agent_snd', path, 0, embedding_params)
-    testAgent.add_memory("documents/LtoA.pdf")
+    testAgent = Agent('agent_snd', db_path, 0, embedding_params, True)
+    # testAgent.add_memory("documents/LtoA.pdf")
     testAgent.start_chat()
