@@ -59,12 +59,12 @@ class ChatBot:
         exit_flag = False
         while not exit_flag:
             quest = input(
-                f"Please ask a question to 💖💖💖 {self.name} 💖💖💖 or type 'exit' to end: ")
+                f" 🔮 Please ask a question to  {self.name}  or type 'exit' to end: 🔮 ")
             quest = self.question + quest
 
             if quest.lower() == 'exit' or "exit" in quest.lower():
                 exit_flag = True
-                print("💖 Goodbye BB 💖!")
+                print(" 💖 Goodbye BB 💖!")
             else:
                 response = qa_chain({"query": quest})
                 # print(f"{self.name}: {response}")
