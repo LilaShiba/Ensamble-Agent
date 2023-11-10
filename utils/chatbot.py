@@ -12,7 +12,7 @@ from langchain.vectorstores import Chroma
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # Configure logging to include time and date
 logging.basicConfig(filename='output.log',
-                    format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+                    format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 
 class ChatBot:
@@ -62,13 +62,14 @@ class ChatBot:
                 f" 🔮 Please ask a question to  {self.name}  or type 'exit' to end: 🔮 ")
             quest = self.question + quest
 
-            if quest.lower() == 'exit' or "exit" in quest.lower():
+            if quest.lower() == 'exit':
                 exit_flag = True
                 print(" 💖 Goodbye BB 💖!")
             else:
                 response = qa_chain({"query": quest})
                 # print(f"{self.name}: {response}")
                 logging.info(self.name, response)
+                logging.debug(response)
                 print(response)
                 print("✨")
                 print("✨")

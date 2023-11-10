@@ -1,4 +1,5 @@
 from typing import *
+import numpy as np
 
 from chatbot import ChatBot
 from loader import NewCourse
@@ -28,6 +29,7 @@ class Agent:
         # Pack Details
         self.vector: list = list()
         self.state: str = None
+        self.heading = np.random.rand() * 2 * np.pi
         # Subprocesses
         # creates self.docs
         print('🔥  Conjuring up',  self.name,  ' 🔥 ')
